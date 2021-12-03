@@ -1,0 +1,29 @@
+{
+  "name": "Artist",
+  "fields": [
+    {
+      "fieldName": "nick",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "firstName",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "lastName",
+      "fieldType": "String"
+    }
+  ],
+  "relationships": [],
+  "entityTableName": "artist",
+  "dto": "mapstruct",
+  "pagination": "pagination",
+  "service": "serviceClass",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "applications": ["bootifulmusic"],
+  "changelogDate": "20211203144907"
+}

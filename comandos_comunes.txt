@@ -1,0 +1,21 @@
+jhipster jdl carroCompras.jdl
+
+
+./mvnw -DskipTests
+./mvnw -DSkipTests -Dspring-boot.run.arguments=--server.port=8083
+./mvnw package -Pprod verify jib:dockerBuild
+./mvnw package -Pprod
+./mvnw package -Pprod jib:dockerBuild -DskipTests
+
+./mvnw dependency:resolve
+./mvnw verify
+
+
+./npmw start
+./npmw install
+
+
+docker-compose -f microProductos/src/main/docker/jhipster-registry.yml up
+(cambiar version docker de 3.8 a 3)
+
+java -jar <microservice>/target/<version>.jar

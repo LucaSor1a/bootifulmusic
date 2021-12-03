@@ -1,0 +1,50 @@
+application {
+  config {
+    baseName bootifulmusic,
+    applicationType monolith,
+    packageName ar.edu.um.isa.bootifulmusic,
+    databaseType sql,
+    devDatabaseType mysql,
+    prodDatabaseType mysql,
+    enableHibernateCache false,
+    testFrameworks [cypress],
+    authenticationType jwt,
+    buildTool maven,
+    clientFramework react,
+    serverPort 8080
+  }
+  entities *
+}
+
+entity Artist {
+  nick String required,
+  firstName String,
+  lastName String
+}
+
+entity Genre {
+  name String required
+}
+
+entity Track {
+  name String required,
+  released LocalDate,
+  length Integer
+}
+
+entity Album {
+  name String required,
+  released LocalDate
+}
+
+relationship ManyToOne {
+  Album{artist(nick)} to Artist
+  Album{genre(name)} to Genre
+}
+
+relationship OneToMany {
+  Album{track(name)} to Track{album(name)}
+}
+
+paginate Artist, Genre, Track, Album with pagination
+dto * with mapstruct

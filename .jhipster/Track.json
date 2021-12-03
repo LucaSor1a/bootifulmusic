@@ -1,0 +1,37 @@
+{
+  "name": "Track",
+  "fields": [
+    {
+      "fieldName": "name",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "released",
+      "fieldType": "LocalDate"
+    },
+    {
+      "fieldName": "length",
+      "fieldType": "Integer"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "album",
+      "otherEntityRelationshipName": "track",
+      "relationshipName": "album",
+      "otherEntityField": "name"
+    }
+  ],
+  "entityTableName": "track",
+  "dto": "mapstruct",
+  "pagination": "pagination",
+  "service": "serviceClass",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "applications": ["bootifulmusic"],
+  "changelogDate": "20211203145107"
+}
