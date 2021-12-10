@@ -17,7 +17,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -179,5 +178,20 @@ public class TrackResource {
             .noContent()
             .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))
             .build();
+    }
+
+    /**
+     * {@code GET  /tracks/album/:id} : get all the tracks of specified album.
+     *
+     * @param pageable  the pagination information.
+     * @param id of the album.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of tracks in body.
+     */
+    @GetMapping("/tracks/album/{id}")
+    public ResponseEntity<List<TrackDTO>> getTracksByAlbum(Pageable pageable, @PathVariable Long id) {
+        log.debug("REST request to get a page of Tracks by album : {}", id);
+        Page<TrackDTO> page = trackService.findByAlbum(pageable, id);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
+        return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
 }

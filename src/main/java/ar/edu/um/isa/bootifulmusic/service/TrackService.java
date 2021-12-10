@@ -1,12 +1,15 @@
 package ar.edu.um.isa.bootifulmusic.service;
 
+import ar.edu.um.isa.bootifulmusic.domain.Album;
 import ar.edu.um.isa.bootifulmusic.domain.Track;
+import ar.edu.um.isa.bootifulmusic.repository.AlbumRepository;
 import ar.edu.um.isa.bootifulmusic.repository.TrackRepository;
 import ar.edu.um.isa.bootifulmusic.service.dto.TrackDTO;
 import ar.edu.um.isa.bootifulmusic.service.mapper.TrackMapper;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -24,6 +27,9 @@ public class TrackService {
     private final TrackRepository trackRepository;
 
     private final TrackMapper trackMapper;
+
+    @Autowired
+    AlbumRepository albumRepository;
 
     public TrackService(TrackRepository trackRepository, TrackMapper trackMapper) {
         this.trackRepository = trackRepository;
@@ -95,5 +101,19 @@ public class TrackService {
     public void delete(Long id) {
         log.debug("Request to delete Track : {}", id);
         trackRepository.deleteById(id);
+    }
+
+    /**
+     * Get all tracks by album.
+     *
+     * @param pageable the pagination information.
+     * @param id of the album.
+     * @return the list of entities.
+     */
+    @Transactional(readOnly = true)
+    public Page<TrackDTO> findByAlbum(Pageable pageable, Long id) {
+        log.debug("Request to get all Tracks of Album : {}", id);
+        Album album = albumRepository.getById(id);
+        return trackRepository.findByAlbum(pageable, album).map(trackMapper::toDto);
     }
 }

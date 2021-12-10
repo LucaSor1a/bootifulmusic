@@ -17,7 +17,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -179,5 +178,20 @@ public class AlbumResource {
             .noContent()
             .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))
             .build();
+    }
+
+    /**
+     * {@code GET  /albums/genres/:id} : get all the albums of specified genre.
+     *
+     * @param pageable  the pagination information.
+     * @param id of the genre.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of albums in body.
+     */
+    @GetMapping("/albums/genre/{id}")
+    public ResponseEntity<List<AlbumDTO>> getAlbumsByGenre(Pageable pageable, @PathVariable Long id) {
+        log.debug("REST request to get a page of Albums by genre : {}", id);
+        Page<AlbumDTO> page = albumService.findByGenre(pageable, id);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
+        return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
 }

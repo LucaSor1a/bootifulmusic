@@ -1,12 +1,16 @@
 package ar.edu.um.isa.bootifulmusic.service;
 
 import ar.edu.um.isa.bootifulmusic.domain.Album;
+import ar.edu.um.isa.bootifulmusic.domain.Genre;
 import ar.edu.um.isa.bootifulmusic.repository.AlbumRepository;
+import ar.edu.um.isa.bootifulmusic.repository.GenreRepository;
 import ar.edu.um.isa.bootifulmusic.service.dto.AlbumDTO;
+import ar.edu.um.isa.bootifulmusic.service.dto.ArtistDTO;
 import ar.edu.um.isa.bootifulmusic.service.mapper.AlbumMapper;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -24,6 +28,9 @@ public class AlbumService {
     private final AlbumRepository albumRepository;
 
     private final AlbumMapper albumMapper;
+
+    @Autowired
+    GenreRepository genreRepository;
 
     public AlbumService(AlbumRepository albumRepository, AlbumMapper albumMapper) {
         this.albumRepository = albumRepository;
@@ -95,5 +102,19 @@ public class AlbumService {
     public void delete(Long id) {
         log.debug("Request to delete Album : {}", id);
         albumRepository.deleteById(id);
+    }
+
+    /**
+     * Get all albums by genre.
+     *
+     * @param pageable the pagination information.
+     * @param id of the genre.
+     * @return the list of entities.
+     */
+    @Transactional(readOnly = true)
+    public Page<AlbumDTO> findByGenre(Pageable pageable, Long id) {
+        log.debug("Request to get all Artists of Genre : {}", id);
+        Genre genre = genreRepository.getById(id);
+        return albumRepository.findByGenre(pageable, genre).map(albumMapper::toDto);
     }
 }
