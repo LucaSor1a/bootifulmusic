@@ -6,6 +6,7 @@ jhipster jdl carroCompras.jdl
 ./mvnw package -Pprod verify jib:dockerBuild
 ./mvnw package -Pprod
 ./mvnw package -Pprod jib:dockerBuild -DskipTests
+./mvnw package -Pprod jib:build
 
 ./mvnw dependency:resolve
 ./mvnw verify
